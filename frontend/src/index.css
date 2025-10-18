@@ -245,3 +245,11 @@ input:focus,select:focus,textarea:focus{outline:2px solid color-mix(in oklab, va
 .modal-close:hover{ filter:brightness(.98) }
 .modal-body{ padding:16px }
 .modal-footer{ display:flex; gap:10px; justify-content:flex-end; padding:12px 16px; border-top:1px solid var(--line) }
+/* registration form grid */
+.reg-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+.reg-grid > div{ display:grid; gap:6px }
+@media (max-width:640px){ .reg-grid{ grid-template-columns:1fr } }
