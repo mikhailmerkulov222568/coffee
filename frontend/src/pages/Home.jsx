@@ -2,9 +2,65 @@ import React from "react";
 import data from "../data.js";
 import Button from "../components/ui/Button.jsx";
 import { Card, CardContent } from "../components/ui/Card.jsx";
-import { Link } from "react-router-dom";
+import ReviewsSection from "../components/ReviewsSection.jsx";
+
+// если уже есть файл src/api.js, импортируй из него:
+const API_BASE = import.meta?.env?.VITE_API_BASE || "http://localhost:4000";
+
+// Простейшая модалка (если у тебя уже есть components/ui/Modal.jsx — можно заменить и использовать её)
+function Modal({ open, onClose, title, children, footer }) {
+    if (!open) return null;
+    return (
+        <div className="modal-backdrop" onClick={onClose}>
+            <div className="modal" role="dialog" aria-modal="true" onClick={(e)=>e.stopPropagation()}>
+                <div className="modal-head">
+                    <div className="modal-title">{title}</div>
+                    <button className="modal-close" onClick={onClose} aria-label="Закрыть">×</button>
+                </div>
+                <div className="modal-body">{children}</div>
+                {footer && <div className="modal-footer">{footer}</div>}
+            </div>
+        </div>
+    );
+}
 
 export default function Home() {
+    // состояние модалки отзывов
+    const [openReview, setOpenReview] = React.useState(false);
+    const [sending, setSending] = React.useState(false);
+    const [success, setSuccess] = React.useState(false);
+    const [form, setForm] = React.useState({ name: "", rating: 5, text: "" });
+
+    async function submitReview(e) {
+        e.preventDefault();
+        if (!form.name.trim() || !form.text.trim()) {
+            alert("Заполните имя и отзыв");
+            return;
+        }
+        setSending(true);
+        try {
+            const res = await fetch(`${API_BASE}/api/reviews`, {
+                method: "POST",
+                headers: { "Content-Type":"application/json" },
+                body: JSON.stringify({
+                    name: form.name.trim(),
+                    text: form.text.trim(),
+                    rating: Number(form.rating) || 5
+                })
+            });
+            if (!res.ok) throw new Error(await res.text());
+            setSuccess(true);
+            // Также можно оптимистично добавить отзыв в превью:
+            // data.reviews.unshift({ name: form.name, text: form.text, rating: Number(form.rating)||5 });
+            setForm({ name:"", rating:5, text:"" });
+        } catch (err) {
+            alert("Не удалось отправить отзыв");
+            console.error(err);
+        } finally {
+            setSending(false);
+        }
+    }
+
     return (
         <main>
             {/* Hero */}
@@ -85,22 +141,61 @@ export default function Home() {
             </section>
 
             {/* Отзывы превью */}
-            <section className="section alt-3" style={{background:"#f8f9fb"}}>
-                <div className="container">
-                    <h2 style={{fontSize:28, margin:"0 0 8px"}}>Отзывы</h2>
-                    <div className="grid" style={{gridTemplateColumns:"1fr 1fr"}}>
-                        {data.reviews.slice(0,2).map((r,i)=>(
-                            <Card key={i}><CardContent>
-                                <div style={{fontWeight:600}}>{r.name}</div>
-                                <div className="subtitle" style={{fontSize:14, marginTop:6}}>{r.text}</div>
-                            </CardContent></Card>
-                        ))}
+            <ReviewsSection/>
+            {/* Модалка "Оставить отзыв" */}
+            <Modal
+                open={openReview}
+                onClose={()=>setOpenReview(false)}
+                title="Оставить отзыв"
+                footer={
+                    !success ? (
+                        <>
+                            <Button variant="ghost" onClick={()=>setOpenReview(false)}>Отмена</Button>
+                            <Button variant="primary" loading={sending} form="reviewForm" type="submit">Отправить</Button>
+                        </>
+                    ) : (
+                        <Button variant="primary" onClick={()=>setOpenReview(false)}>Готово</Button>
+                    )
+                }
+            >
+                {!success ? (
+                    <form id="reviewForm" onSubmit={submitReview} className="grid" style={{gap:10}}>
+                        <div>
+                            <label className="text-sm">Имя</label>
+                            <input
+                                type="text"
+                                placeholder="Ваше имя"
+                                value={form.name}
+                                onChange={e=>setForm({...form, name:e.target.value})}
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className="text-sm">Оценка</label>
+                            <select
+                                value={form.rating}
+                                onChange={e=>setForm({...form, rating:e.target.value})}
+                            >
+                                {[5,4,3,2,1].map(n=><option key={n} value={n}>{n}</option>)}
+                            </select>
+                        </div>
+                        <div>
+                            <label className="text-sm">Ваш отзыв</label>
+                            <textarea
+                                rows={5}
+                                placeholder="Что вам понравилось?"
+                                value={form.text}
+                                onChange={e=>setForm({...form, text:e.target.value})}
+                                required
+                            />
+                        </div>
+                    </form>
+                ) : (
+                    <div className="text-sm">
+                        <p><strong>Спасибо!</strong> Ваш отзыв отправлен и будет опубликован.</p>
                     </div>
-                    <div style={{marginTop:12}}>
-                        <Button as="a" href="/contacts">Связаться с нами</Button>
-                    </div>
-                </div>
-            </section>
+                )}
+            </Modal>
         </main>
     );
 }

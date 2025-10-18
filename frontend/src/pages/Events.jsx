@@ -3,6 +3,7 @@ import data from "../data.js";
 import Button from "../components/ui/Button.jsx";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/Card.jsx";
 import Modal from "../components/ui/Modal.jsx";
+import {API_BASE} from "../api.js";
 
 export default function Events() {
     const [openId, setOpenId] = React.useState(null);       // для "Подробнее"
@@ -33,10 +34,33 @@ export default function Events() {
         const err = validate();
         if (err){ alert(err); return; }
         setSending(true);
-        // имитация отправки
-        await new Promise(r=>setTimeout(r, 800));
-        setSending(false);
-        setSuccess(true);
+
+        try {
+            const res = await fetch(`${API_BASE}/api/registrations`, {
+                method: 'POST',
+                headers: { 'Content-Type':'application/json' },
+                body: JSON.stringify({
+                    eventTitle: selected?.title,
+                    date: selected?.date,
+                    time: selected?.time,
+                    place: selected?.place,
+                    requiresRegistration: !!selected?.requiresRegistration,
+                    name: form.name.trim(),
+                    phone: form.phone.trim(),
+                    email: form.email.trim() || undefined
+                })
+            });
+
+            if (!res.ok) {
+                const msg = await res.text();
+                throw new Error(msg || 'Ошибка отправки');
+            }
+            setSuccess(true); // покажем экран "успех"
+        } catch (e) {
+            alert(e.message || 'Не удалось отправить заявку');
+        } finally {
+            setSending(false);
+        }
     }
 
     return (
@@ -123,7 +147,7 @@ export default function Events() {
                             <label className="text-sm">Телефон</label>
                             <input
                                 type="tel"
-                                placeholder="+996 ..."
+                                placeholder="+7 ..."
                                 value={form.phone}
                                 onChange={e=>setForm({...form, phone:e.target.value})}
                                 required

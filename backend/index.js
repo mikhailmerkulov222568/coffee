@@ -4,7 +4,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import pino from 'pino';
 import registrationsRouter from './routes/registrations.js';
-
+import reviewsRouter from './routes/reviews.js';
 const {
     PORT = 4000,
     MONGODB_URI = 'mongodb://localhost:27017/coffee_books',
@@ -27,6 +27,7 @@ async function start() {
     app.get('/api/health', (_req, res) => res.json({ ok: true }));
 
     app.use('/api/registrations', registrationsRouter);
+    app.use('/api/reviews', reviewsRouter);
 
     app.use((err, _req, res, _next) => {
         log.error(err);
