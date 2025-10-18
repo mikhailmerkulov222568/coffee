@@ -1,23 +1,247 @@
-:root{--txt:#1f2937;--muted:#6b7280;--line:#e5e7eb;}
-*{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;color:var(--txt);background:#fff}
-a{color:inherit;text-decoration:none}
-.container{max-width:1120px;margin:0 auto;padding:0 16px}
-header{position:sticky;top:0;background:rgba(255,255,255,.85);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);z-index:50}
-.nav{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
-.brand{display:flex;gap:10px;align-items:center}
-.brand-badge{width:36px;height:36px;border-radius:12px;background:#111827;color:#fff;display:grid;place-items:center;font-weight:700}
-nav a{margin:0 8px} nav a:hover{opacity:.75}
-.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);padding:8px 12px;border-radius:10px;background:#fff;cursor:pointer}
-.btn.primary{background:#111827;color:#fff;border-color:#111827}
-.btn.secondary{background:#fff;border-color:#ffffff33}
-.grid{display:grid;gap:16px}
-.grid-3{grid-template-columns:1fr 1fr 1fr}
-.card{border-radius:16px;border:1px solid var(--line);background:#fff;overflow:hidden}
-.media{aspect-ratio:4/3;background:#f3f4f6}
-.media img{width:100%;height:100%;object-fit:cover;display:block}
-.section{padding:40px 0}
+/* src/index.css — Coffee Pastel UI  */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap");
+
+:root{
+    /* Пастельная кофейная палитра */
+    --bg: #f9f5f1;          /* кремовый фон */
+    --surface: #fffaf5;     /* светлый слой */
+    --card: #fffdfb;        /* карточки */
+    --text: #2f2a26;        /* эспрессо */
+    --muted: #7c6f66;       /* карамель */
+    --line: #eadfd6;        /* пенка */
+    --primary: #7A5B45;     /* латте */
+    --primary-ink: #ffffff;
+    --primary-600: #6b4f3d;
+    --accent: #c7a17a;      /* мокка */
+    --accent-ink: #2f2a26;
+
+    --radius: 16px;
+    --shadow-1: 0 2px 10px rgba(42,30,19,.06), 0 1px 0 rgba(42,30,19,.04);
+    --shadow-2: 0 6px 24px rgba(42,30,19,.10), 0 2px 6px rgba(42,30,19,.06);
+}
+
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{
+    margin:0;
+    font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+    color:var(--text);
+    background:var(--bg);
+}
+
+/* Layout */
+.container{max-width:1120px;margin:0 auto;padding:0 20px}
+.section{padding:56px 0}
+.section.alt-1{background:#f6eee7}
+.section.alt-2{background:#f4efe9}
+.section.alt-3{background:#efe6df}
+
+/* Header / Footer */
+header{
+    position:sticky; top:0; z-index:50;
+    backdrop-filter: blur(6px);
+    background: color-mix(in oklab, var(--surface) 88%, transparent);
+    border-bottom:1px solid var(--line);
+}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+.brand{display:flex;gap:12px;align-items:center}
+.brand-badge{
+    width:40px;height:40px;border-radius:12px;
+    background:var(--primary);color:var(--primary-ink);
+    display:grid;place-items:center;font-weight:700
+}
+nav a{
+    margin:0 10px;padding:8px 10px;border-radius:10px;
+    color:var(--text);text-decoration:none
+}
+nav a:hover{background:rgba(122,91,69,.08)}
+nav a.active{background:rgba(122,91,69,.14)}
+
+/* Typography */
+h1,h2,h3{font-family:"Playfair Display", serif; margin:0}
+h1{font-size:42px;line-height:1.15}
+h2{font-size:32px}
+h3{font-size:22px}
 .subtitle{color:var(--muted)}
-.footer{border-top:1px solid var(--line);padding:20px 0;color:var(--muted);font-size:14px}
-.aspect-video{position:relative;padding-top:56.25%;background:#111;border-radius:16px;overflow:hidden}
-.aspect-video img, .aspect-video iframe{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-input,select,textarea{border:1px solid var(--line);border-radius:12px;padding:10px 12px;font:inherit;width:100%}
+.text-sm{font-size:14px}
+
+/* Cards */
+/* === CARDS @65% (сбалансировано) === */
+:root { --card-scale: 1; }  /* 0.65 ≈ на 35% меньше оригинала, но больше чем 0.5 */
+
+.card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius: calc(16px * var(--card-scale)); /* ≈ 10px */
+    box-shadow:var(--shadow-1);
+    overflow:hidden;
+    padding: 10px;
+}
+.card:hover{ box-shadow:var(--shadow-2); }
+
+.card-head{
+    padding: calc(18px * var(--card-scale)) calc(20px * var(--card-scale)) 0;
+    font-size: 35px;/* ≈ 12px 13px 0 */
+}
+.card-body{
+    padding: calc(18px * var(--card-scale)) calc(20px * var(--card-scale)) calc(20px * var(--card-scale)); /* ≈ 12px 13px 13px */
+}
+
+/* медиаблок чуть выше, чем в 16:9, но ниже оригинала 4:3 — компромисс */
+.media{ aspect-ratio: 5/4; background:#efe8e2; }
+.media img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+/* шрифты внутри карточек – умеренно компактные */
+.card .title, .card h3{ font-size:
+        calc(20px * var(--card-scale)); line-height:1.28;
+} /* ≈ 13px */
+.card .text-sm{ font-size: calc(14px * var(--card-scale)); }   /* ≈ 9px */
+.card .subtitle{ font-size: calc(14px * var(--card-scale)); }  /* ≈ 9px */
+/* === GRID tuning for 65% === */
+.grid{ display:grid; gap:12px; }
+
+/* где использовалась .grid-3 */
+.grid-3{ grid-template-columns: repeat(3, 1fr); }
+@media (min-width:1100px){ .grid-3{ grid-template-columns: repeat(5, 1fr); } }  /* вместо 6 — теперь 5 */
+@media (min-width:1440px){ .grid-3{ grid-template-columns: repeat(5, 1fr); } }
+
+/* события */
+.events-grid{ display:grid; gap:12px; grid-template-columns: 1fr 1fr; }
+@media (min-width:1100px){ .events-grid{ grid-template-columns: repeat(3, 1fr); } } /* оставим 3 */
+@media (min-width:1440px){ .events-grid{ grid-template-columns: repeat(3, 1fr); } }
+/* ====== GRID: 3 карточки в строку на десктопе ====== */
+.grid{ display:grid; gap:16px; }
+.grid-3{ grid-template-columns: repeat(3, 1fr); }
+
+/* Адаптивность: планшет — 2, мобильный — 1 */
+@media (max-width: 1024px){ .grid-3{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px){  .grid-3{ grid-template-columns: 1fr; } }
+
+/* ====== НОРМАЛЬНЫЕ КАРТОЧКИ ====== */
+.card{
+    background: var(--card, #fff);
+    border: 1px solid var(--line, #e8e5e1);
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.06);
+    overflow: hidden;
+    transition: box-shadow .2s ease, transform .06s ease;
+}
+.card:hover{
+    box-shadow: 0 6px 24px rgba(0,0,0,.10);
+    transform: translateY(-1px);
+}
+
+/* шапка/контент карточки — комфортные отступы */
+.card-head{ padding: 16px 18px 0; }
+.card-body{ padding: 14px 18px 18px; }
+
+/* медиаблок: «нормальная» высота под фото/обложку */
+.media{
+    aspect-ratio: 4 / 3;           /* изменишь на 3/2 — станет ниже */
+    background: #f1eee9;
+}
+.media img{
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+}
+
+/* аккуратная типографика внутри карточки */
+.card h3{ margin: 0; font-size: 18px; line-height: 1.3; }
+.card .meta{ color: #7a7067; font-size: 14px; margin-top: 6px; }
+.card .price{ font-weight: 600; }
+
+/* кнопки под карточкой (если нужны) */
+.card-actions{ display:flex; gap:10px; margin-top: 10px; }
+.btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding: 8px 12px; border-radius: 10px;
+    border: 1px solid #e8e5e1; background:#fff; color:#2f2a26;
+    text-decoration:none; cursor:pointer;
+}
+.btn.primary{ background:#7A5B45; border-color:#7A5B45; color:#fff; }
+.btn:hover{ filter: brightness(0.98); }
+
+/* Buttons */
+.btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:10px 16px;border-radius:12px;border:1px solid var(--line);
+    background:var(--surface);color:var(--text);cursor:pointer;
+    text-decoration:none;transition:transform .05s ease, background .2s ease;
+}
+.btn:hover{background:#fffaf7}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--primary);border-color:var(--primary);color:var(--primary-ink)}
+.btn.primary:hover{background:var(--primary-600)}
+.btn.outline{background:transparent;border-color:var(--primary);color:var(--primary)}
+.btn.ghost{background:transparent;border-color:transparent}
+.btn.block{display:flex;justify-content:center;width:100%}
+
+/* Forms */
+input,select,textarea{
+    width:100%;
+    border:1px solid var(--line); border-radius:12px;
+    background:#fff; color:var(--text);
+    padding:12px 14px; font:inherit;
+}
+input:focus,select:focus,textarea:focus{outline:2px solid color-mix(in oklab, var(--accent) 55%, white)}
+
+/* Chips / Badges */
+.pill{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 10px;border-radius:999px;
+    border:1px solid var(--line);
+    background:#f3e9df; color:var(--text); font-size:12px;
+}
+.pill.warn{background:#ffe8c9; border-color:#ffd9a1; color:#7a4b0e; font-weight:600}
+
+/* Events specific */
+.events-grid{
+    display:grid;grid-template-columns:1fr 1fr;
+    gap:18px;
+    padding: 10px;
+}
+@media (max-width: 920px){ .events-grid{
+    grid-template-columns:1fr;
+    padding: 10px;
+} }
+.event-card .meta{color:var(--muted);font-size:14px;margin-top:6px}
+.event-card .row{margin:6px 0}
+.event-actions{display:flex;gap:10px;margin-top:12px}
+
+/* Utility */
+.mt-8{margin-top:8px}
+.mt-12{margin-top:12px}
+.mt-16{margin-top:16px}
+/* sizes & states */
+.btn-sm{ padding:6px 10px; font-size:13px; border-radius:8px }
+.btn-block{ width:100%; justify-content:center }
+.is-loading .btn-label{ opacity:.85 }
+.btn-spinner{
+    width:14px; height:14px; border-radius:50%;
+    border:2px solid rgba(0,0,0,.12);
+    border-top-color: currentColor;
+    animation: spin .8s linear infinite;
+    display:inline-block; margin-right:8px;
+}
+@keyframes spin{ to{ transform: rotate(360deg) } }
+/* Modal */
+.modal-backdrop{
+    position:fixed; inset:0; background:rgba(0,0,0,.35);
+    display:grid; place-items:center; z-index:1000;
+}
+.modal{
+    width:min(560px, 92vw);
+    background:var(--surface,#fff);
+    border:1px solid var(--line,#e8e5e1);
+    border-radius:16px; box-shadow:0 24px 64px rgba(0,0,0,.25);
+    overflow:hidden;
+}
+.modal-head{ display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid var(--line) }
+.modal-title{ font-weight:600; font-size:18px }
+.modal-close{
+    width:32px;height:32px;border-radius:8px;border:1px solid var(--line);
+    background:#fff; cursor:pointer;
+}
+.modal-close:hover{ filter:brightness(.98) }
+.modal-body{ padding:16px }
+.modal-footer{ display:flex; gap:10px; justify-content:flex-end; padding:12px 16px; border-top:1px solid var(--line) }
